@@ -24,6 +24,7 @@ exports.handler = async (event, context) => {
     if (!response.ok) {
       return {
         statusCode: 200,
+        headers: headers,
         body: JSON.stringify({ 
           url: url,
           error: `HTTP ${response.status}`,
@@ -53,9 +54,9 @@ exports.handler = async (event, context) => {
     
     return {
       statusCode: 200,
+      headers: headers,
       body: JSON.stringify({ 
         url: url,
-        headers: headers,
         totalImages: allImgSrcs.length,
         allImageSrcs: allImgSrcs,//.slice(0, 10), // First 10 for debugging
         jpgImages: jpgSrcs,
@@ -65,6 +66,7 @@ exports.handler = async (event, context) => {
   } catch (error) {
     return {
       statusCode: 500,
+      headers: headers,
       body: JSON.stringify({ 
         error: 'Failed to fetch URL',
         message: error.message,
