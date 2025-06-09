@@ -42,9 +42,9 @@ exports.handler = async (event, context) => {
       const src = $(elem).attr('src');
       if (src) {
         allImgSrcs.push(src);
-        if (src.toLowerCase().match(/\.jpe?g(\?|$)/)) {
-          jpgSrcs.push(src);
-        }
+        // if (src.toLowerCase().match(/\.jpe?g(\?|$)/)) {
+        //   jpgSrcs.push(src);
+        // }
       }
     });
     
