@@ -1,12 +1,30 @@
 const cheerio = require('cheerio');
 
+// Define CORS headers
+const headers = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS, POST',
+  'Content-Type': 'application/json'
+};
+
 exports.handler = async (event, context) => {
+  // Handle preflight OPTIONS request
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: headers,
+      body: ''
+    };
+  }
+
   // Get URL from query parameters
   const url = event.queryStringParameters?.url;
   
   if (!url) {
     return {
       statusCode: 400,
+      headers: headers,
       body: JSON.stringify({ error: 'URL parameter is required' })
     };
   }
@@ -14,10 +32,7 @@ exports.handler = async (event, context) => {
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS, POST',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
       }
     });
     
@@ -58,7 +73,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ 
         url: url,
         totalImages: allImgSrcs.length,
-        allImageSrcs: allImgSrcs,//.slice(0, 10), // First 10 for debugging
+        allImageSrcs: allImgSrcs,
         jpgImages: jpgSrcs,
         htmlLength: html.length
       })
