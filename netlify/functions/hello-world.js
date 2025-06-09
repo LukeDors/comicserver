@@ -1,12 +1,29 @@
 const cheerio = require('cheerio');
 
 exports.handler = async (event, context) => {
+  // CORS headers
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*', // or specify your domain
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+  };
+
+  // Handle preflight OPTIONS request
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: ''
+    };
+  }
+
   // Get URL from query parameters
   const url = event.queryStringParameters?.url;
   
   if (!url) {
     return {
       statusCode: 400,
+      headers: corsHeaders,
       body: JSON.stringify({ error: 'URL parameter is required' })
     };
   }
@@ -21,6 +38,7 @@ exports.handler = async (event, context) => {
     if (!response.ok) {
       return {
         statusCode: 200,
+        headers: corsHeaders,
         body: JSON.stringify({ 
           url: url,
           error: `HTTP ${response.status}`,
@@ -50,10 +68,11 @@ exports.handler = async (event, context) => {
     
     return {
       statusCode: 200,
+      headers: corsHeaders,
       body: JSON.stringify({ 
         url: url,
         totalImages: allImgSrcs.length,
-        allImageSrcs: allImgSrcs,//.slice(0, 10), // First 10 for debugging
+        allImageSrcs: allImgSrcs,
         jpgImages: jpgSrcs,
         htmlLength: html.length
       })
@@ -61,6 +80,7 @@ exports.handler = async (event, context) => {
   } catch (error) {
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({ 
         error: 'Failed to fetch URL',
         message: error.message,
