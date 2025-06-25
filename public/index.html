@@ -17,8 +17,7 @@
         const responseText = document.getElementById('response-output')
 
         fetchBtn.addEventListener('click', async () => {
-          console.log("test");
-          const response = await fetch('/.netlify/functions/hello-world?url=https://www.zipcomic.com/guardians-of-the-galaxy-2023-issue-1')
+          const response = await fetch('/.netlify/functions/get-links?url=https://www.zipcomic.com/spider-woman-1999')
             .then(response => response.json()
           )
 
